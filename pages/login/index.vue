@@ -63,6 +63,10 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
+
+const config = useRuntimeConfig();
+const API_BASE = config.public.apiBase;
 
 const router = useRouter();
 const container = ref(null);
@@ -97,8 +101,24 @@ const gradientStyle = computed(() => {
   };
 });
 
-const handleLogin = () => {
+
+
+
+const handleLogin = async () => {
   console.log('Login attempted', { email: email.value, password: password.value });
+
+  try {
+
+    const response = await axios.post(API_BASE + 'auth/user/login', {
+      email: email.value,
+      password: password.value
+    });
+    console.log('Login successful', response.data);
+    // Store the token, update user state, redirect, etc.
+    // localStorage.setItem('token', response.data.token);
+  } catch (error) {
+    console.error('Login failed', error.response.data);
+  }
 
   // router.push('/dashboard');
 };
