@@ -61,9 +61,10 @@
 </template>
 
 <script setup>
+import axios from 'axios';
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
+import Cookies from 'js-cookie'
 
 const config = useRuntimeConfig();
 const API_BASE = config.public.apiBase;
@@ -102,10 +103,7 @@ const gradientStyle = computed(() => {
 });
 
 
-
-
 const handleLogin = async () => {
-  console.log('Login attempted', { email: email.value, password: password.value });
 
   try {
 
@@ -113,9 +111,9 @@ const handleLogin = async () => {
       email: email.value,
       password: password.value
     });
-    console.log('Login successful', response.data);
-    // Store the token, update user state, redirect, etc.
-    // localStorage.setItem('token', response.data.token);
+
+    Cookies.set('AUTH_TOKEN', response.data.token);
+
   } catch (error) {
     console.error('Login failed', error.response.data);
   }
