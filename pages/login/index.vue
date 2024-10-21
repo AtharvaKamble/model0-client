@@ -113,12 +113,14 @@ const handleLogin = async () => {
     });
 
     Cookies.set('AUTH_TOKEN', response.data.token);
+    Cookies.set('USER_ID', response.data.user.id);
+    router.push('/dashboard');
 
   } catch (error) {
     console.error('Login failed', error.response.data);
+    alert('Email or Password is incorrect.')
   }
 
-  // router.push('/dashboard');
 };
 </script>
 
