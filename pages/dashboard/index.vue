@@ -3,7 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie'
 import Dialog from 'primevue/dialog';
 import Button from '@/components/Button.vue'
-import CreateProjectDialog from '@/components/CreateProjectDialog.vue'
+import CreateProjectDialog from '~/components/CreateDialog.vue'
 
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
@@ -61,20 +61,7 @@ const openProject = (projectId) => {
 
 };
 
-const createNewProject = () => {
-  console.log('Creating new project');
-};
-
 const open = ref(false);
-
-const showModal = () => {
-  open.value = true;
-};
-
-const handleOk = (e) => {
-  console.log(e);
-  open.value = false;
-};
 
 
 onMounted(fetchProjects);
@@ -94,7 +81,6 @@ onMounted(fetchProjects);
             :visible="dialogVisible"
             @update:visible="dialogVisible = $event"
             header="Create a new project"
-
         >
           <form @submit.prevent="handleSubmit">
             <div class="flex flex-col gap-4 mb-4">
