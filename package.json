@@ -10,13 +10,20 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@iconify/vue": "^4.1.2",
+    "@primevue/themes": "^4.1.1",
+    "ant-design-vue": "^4.2.5",
     "axios": "^1.7.7",
     "js-cookie": "^3.0.5",
     "nuxt": "^3.13.2",
+    "primevue": "^4.1.1",
+    "radix-vue": "^1.9.7",
+    "tailwindcss-primeui": "^0.3.4",
     "vue": "latest",
     "vue-router": "latest"
   },
   "devDependencies": {
+    "@primevue/nuxt-module": "^4.1.1",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14"
