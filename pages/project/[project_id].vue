@@ -57,9 +57,20 @@ const emit = defineEmits(['updateModelStatus']);
 
 const copyStatus = reactive({});
 
-const toggleModelStatus = (model) => {
-  const newStatus = model.status === 'active' ? 'inactive' : 'active';
-  emit('updateModelStatus', { modelId: model.id, newStatus });
+const toggleModelStatus = async (model) => {
+
+  if (!model.is_deployed) {
+    const response = await axios.post(`${API_BASE}api/model/deploy/`, {
+      model_id: model.id,
+    });
+  } else {
+    const response = await axios.post(`${API_BASE}api/model/withdraw/`, {
+      model_id: model.id,
+    });
+  }
+
+  fetchModels();
+
 };
 
 const copyModelId = async (modelId) => {
@@ -172,9 +183,9 @@ onMounted(() => {
               <h3 class="text-xl font-semibold text-gray-900">{{ model.name }}</h3>
               <span :class="[
             'px-2 py-1 text-xs font-semibold rounded-full',
-            model.status === 'active' ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'
+            model.is_deployed ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'
           ]">
-            {{ model.status === 'active' ? 'Active' : 'Inactive' }}
+            {{ model.is_deployed ? 'Active' : 'Inactive' }}
           </span>
             </div>
             <p class="text-gray-600 mb-4">{{ model.description }}</p>
@@ -193,7 +204,7 @@ onMounted(() => {
                   class="text-white font-semibold py-2 px-4 rounded"
                   filled
               >
-                {{ model.status === 'active' ? 'Undeploy' : 'Deploy' }}
+                {{ model.is_deployed ? 'Undeploy' : 'Deploy' }}
               </Button>
             </div>
           </div>
