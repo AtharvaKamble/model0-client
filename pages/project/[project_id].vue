@@ -53,10 +53,27 @@ const handleCreateModel = async () => {
 
 };
 
-const openModel = (modelId) => {
-  console.log('Opening model:', modelId);
+const emit = defineEmits(['updateModelStatus']);
 
+const copyStatus = reactive({});
+
+const toggleModelStatus = (model) => {
+  const newStatus = model.status === 'active' ? 'inactive' : 'active';
+  emit('updateModelStatus', { modelId: model.id, newStatus });
 };
+
+const copyModelId = async (modelId) => {
+  try {
+    await navigator.clipboard.writeText(modelId.toString());
+    copyStatus[modelId] = true;
+    setTimeout(() => {
+      copyStatus[modelId] = false;
+    }, 5000);
+  } catch (err) {
+    console.error('Failed to copy text: ', err);
+  }
+};
+
 
 onMounted(() => {
   fetchProjectData();
@@ -73,9 +90,9 @@ onMounted(() => {
         <p class="text-gray-600">{{ project.description }}</p>
       </div>
 
-      <div class="mb-6 flex justify-between items-center">
-        <h2 class="text-2xl font-semibold text-gray-800">Models</h2>
-        <Button @click="dialogVisible = true"  filled>Create New Model</Button>
+      <div class="mb-20 flex justify-between items-center">
+        <h2 class="text-7xl font-semibold text-gray-800">Your Models</h2>
+        <Button @click="dialogVisible = true"  >Create New Model</Button>
       </div>
 
 
@@ -135,19 +152,53 @@ onMounted(() => {
         </form>
       </CreateProjectDialog>
 
+<!--      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">-->
+<!--        <div v-for="model in models" :key="model.id" class="bg-white rounded-lg shadow-md overflow-hidden">-->
+<!--          <div class="p-6">-->
+<!--            <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ model.name }}</h3>-->
+<!--            <p class="text-gray-600 mb-4">{{ model.description }}</p>-->
+<!--            <div class="flex justify-between items-center">-->
+<!--              <span class="text-sm text-gray-500">Created: {{ new Date(model.created_at).toLocaleDateString() }}</span>-->
+<!--              <Button @click="openModel(model.id)" filled>Open Model</Button>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div v-for="model in models" :key="model.id" class="bg-white rounded-lg shadow-md overflow-hidden">
           <div class="p-6">
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ model.name }}</h3>
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-xl font-semibold text-gray-900">{{ model.name }}</h3>
+              <span :class="[
+            'px-2 py-1 text-xs font-semibold rounded-full',
+            model.status === 'active' ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'
+          ]">
+            {{ model.status === 'active' ? 'Active' : 'Inactive' }}
+          </span>
+            </div>
             <p class="text-gray-600 mb-4">{{ model.description }}</p>
             <div class="flex justify-between items-center">
               <span class="text-sm text-gray-500">Created: {{ new Date(model.created_at).toLocaleDateString() }}</span>
-              <Button @click="openModel(model.id)" filled>Open Model</Button>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+              <button
+                  @click="copyModelId(model.id)"
+                  class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              >
+                {{ copyStatus[model.id] ? 'Copied' : 'Copy ID' }}
+              </button>
+              <Button
+                  @click="toggleModelStatus(model)"
+                  class="text-white font-semibold py-2 px-4 rounded"
+                  filled
+              >
+                {{ model.status === 'active' ? 'Undeploy' : 'Deploy' }}
+              </Button>
             </div>
           </div>
         </div>
       </div>
-
       <div v-if="models.length === 0" class="text-center text-gray-500 mt-8">
         No models yet. Create your first model!
       </div>

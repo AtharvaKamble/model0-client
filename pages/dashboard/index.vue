@@ -72,8 +72,8 @@ onMounted(fetchProjects);
 <!--    <div class="absolute inset-0 pointer-events-none"></div>-->
     <div class="w-full  max-w-4xl relative z-10">
       <div class="bg-white min-h-[45rem] my-10 shadow-md rounded px-8 py-6 transition">
-        <div class="w-full flex justify-between mb-4">
-          <h2 class="text-2xl font-semibold align-middle">My Projects</h2>
+        <div class="w-full flex justify-between mb-10">
+          <h2 class="text-5xl font-semibold align-middle">My Projects</h2>
           <button @click="dialogVisible = true" class="p-2 rounded align-middle underline transform underline-offset-4 hover:-translate-y-1 transition">Create a project</button>
         </div>
 
